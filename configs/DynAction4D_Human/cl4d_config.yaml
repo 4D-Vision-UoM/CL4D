@@ -1,0 +1,141 @@
+# CL4D Training Configuration
+
+# Experiment metadata
+experiment:
+  name: "CL4D"
+  description: "CL4D pipeline training"
+  tags: ["4d", "motion_text_alignment", "cl4d", "contrastive"]
+
+# Model configuration
+model:
+  # Pipeline module and its initialization arguments
+  pipeline_module: "src.models.pipelines.cl4d_module.cl4d_pipeline"
+  pipeline_class: "CL4D"
+  
+  pipeline_args:
+    # Motion encoder config
+    motion_encoder_alias: "vit_base_patch16_224_in21k"
+    motion_encoder_pretrained: true
+    motion_encoder_trainable: true
+    motion_embedding_dims: 768
+    projection_dims: 256
+    dropout: 0.5
+    patch_size: 16
+    num_frames: 32  ### must match num_frames in data config
+    num_groups: 64
+    
+    # Point encoder config
+    point_encoder_config:
+      dvae_config:
+        encoder_dim: 256
+        group_size: 32
+        num_group: 64
+        encoder_out: 512
+        ckpt: "weights/dVAE.pth" # Null to use random initialized Pointnet
+        freeze_encoder: true
+      transformer_config:
+        embed_dim: 768
+        depth: 4
+        num_heads: 12
+        mlp_ratio: 4.0
+        qkv_bias: false
+        qk_scale: null
+        drop_rate: 0.0
+        attn_drop_rate: 0.0
+        drop_path_rate: 0.1
+    
+    # Device
+    device: "cuda"
+  
+  # Text encoder configuration
+  text_encoder_config:
+    text_encoder_type: "distilbert"
+    text_model_name: "distilbert-base-uncased"
+    freeze_text_encoder: false
+    text_embedding_dims: 768
+    projection_dims: 256
+    dropout: 0.5
+
+# Data configuration
+data:
+  # Dataset module and class
+  dataset_module: "src.datasets.DynAction4D_Human"
+  dataset_class: "DynAction4DHuman"
+  collate_fn: "collate_fn"  # Name of collate function in the dataset module
+  
+  data_root: "data/DynAction4D_Human"
+  train_split: "train"
+  val_split: "val"
+  num_frames: 32  ### must match num_frames in model config
+  num_points: 2048
+  batch_size: 32
+  num_workers: 24
+  pin_memory: True
+  
+  # Sequence dataset configuration
+  sequence_config:
+    seed: 42
+
+# Training configuration
+training:
+  num_epochs: 150
+  
+  # Optimizer settings
+  optimizer:
+    type: "adamw"
+    motion_lr: 1.0e-4
+    text_lr: 1.0e-5
+    head_lr: 1.0e-4
+    weight_decay: 1.0e-4
+    betas: [0.9, 0.999]
+    eps: 1.0e-8
+  
+  # Learning rate scheduler
+  scheduler:
+    type: "cosine"
+    eta_min: 1.0e-6
+  
+  # Loss function
+  loss:
+    type: "clip_contrastive"  # "siglip" , "clip_contrastive"
+    logit_scale: 0.07  # Temperature parameter
+    # logit_bias: -10.0  # Bias for SigLIP loss (only used if type is "siglip")
+  
+  # Validation settings
+  validation:
+    every_n_epochs: 1
+    metric: "loss"
+    mode: "min"
+    
+  # Training optimizations
+  mixed_precision: false
+  gradient_clipping: 1.0
+  accumulate_gradients: 1
+
+# Checkpointing configuration
+checkpointing:
+  save_best: true
+  save_last: true
+  save_every_n_epochs: 10
+  max_checkpoints: 10
+
+# Logging configuration
+logging:
+  log_level: "INFO"
+  console_level: "INFO"
+  file_level: "DEBUG"
+  tensorboard_flush_secs: 60
+
+# Output paths
+paths:
+  output_dir: "output/DynAction4DHuman"
+  checkpoint_dir: "checkpoints"
+  log_dir: "logs"
+  tensorboard_dir: "tensorboard"
+
+# Resume training
+resume:
+  enabled: false
+  checkpoint_path: null
+  resume_best: false
+  resume_last: false

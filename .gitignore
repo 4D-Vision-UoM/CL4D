@@ -1,0 +1,64 @@
+# Python
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+*.whl
+
+# Data and Output
+/data
+/output
+
+# Logs
+*.log
+logs/
+
+
+# Compiled CUDA extensions
+*.cu.o
+*.ptx
+*.cubin
+
+# IDE and Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+
+# Model Checkpoints 
+*.pth
+*.ckpt
+*.pt
+*.safetensors
+
+# TensorBoard
+tensorboard/
+events.out.tfevents.*
+
+# Temporary files
+*.tmp
+*.bak
+
+
+# Environment
+.env
+.venv
+env/
+venv/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# OpenRouter API key
+configs/openrouter/OpenRouter_API.yaml
+
