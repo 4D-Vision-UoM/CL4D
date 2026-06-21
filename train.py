@@ -564,9 +564,10 @@ class Trainer:
                         f"Time: {batch_time:.2f}s"
                     )
 
-            except Exception as e:
-                self.logger.error(f"Error in training batch {batch_idx}: {e}")
-                continue
+            except Exception:
+                self.logger.error(f"Error processing batch {batch_idx} in epoch {self.current_epoch}")
+                self.logger.error("Terminating training due to fatal error.")
+                raise
 
         if epoch_metrics["num_sequences"] > 0:
             epoch_metrics["loss"] /= epoch_metrics["num_sequences"]
