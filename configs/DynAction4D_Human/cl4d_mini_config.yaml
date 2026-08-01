@@ -21,7 +21,7 @@ model:
     projection_dims: 192
     dropout: 0.5
     patch_size: 16
-    num_frames: 72  ### must match num_frames in data config
+    num_frames: 32  ### must match num_frames in data config
     num_groups: 64
     
     # Point encoder config
@@ -66,7 +66,7 @@ data:
   data_root: "data/DynAction4D_Human"
   train_split: "train"
   val_split: "val"
-  num_frames: 72  ### must match num_frames in model config
+  num_frames: 32  ### must match num_frames in model config
   num_points: 2048
   batch_size: 32
   num_workers: 24

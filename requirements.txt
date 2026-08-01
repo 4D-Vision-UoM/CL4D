@@ -1,22 +1,12 @@
-# Core Deep Learning
-torch==2.4.0
-torchvision==0.19.0
-torchaudio==2.4.0
-numpy==1.26.4
-einops==0.8.1
-
-# Transformers (CRITICAL: Must be 4.37.2 for apply_chunking_to_forward compatibility)
-transformers==4.37.2
-tokenizers==0.15.2
-
-# Point Cloud Processing
+torch
+torchvision
+torchaudio
+numpy
+einops
+transformers
+tokenizers
 spconv-cu124
-torch-scatter  # Install with: --find-links https://data.pyg.org/whl/torch-2.4.0+cu124.html
-open3d
 trimesh
-
-
-clip @ git+https://github.com/openai/CLIP.git
 timm
 pillow
 safetensors
@@ -35,3 +25,4 @@ huggingface-hub
 filelock
 ipdb
 deepspeed
+omegaconf

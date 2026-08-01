@@ -59,6 +59,7 @@ For training with other encoder architectures, follow their respective setup ins
 pip install gdown
 
 # Download PointNet weights
+mkdir weights
 gdown 1Fh061dVtq6_vzjmgFH2qX72C9y47N1cA -O weights/dVAE.pth
 ```
 
